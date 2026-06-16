@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <h2 class="text-center text-info mb-4">Welcome, {{ userdata.name }}!</h2>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card bg-dark text-light mb-3">
+                <div class="card-body text-center">
+                    <h5>Encrypt Data</h5>
+                    <a href="{% url 'encryptdata' %}" class="btn btn-primary">Encrypt</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card bg-dark text-light mb-3">
+                <div class="card-body text-center">
+                    <h5>My Files</h5>
+                    <a href="{% url 'viewfiles' %}" class="btn btn-success">View Files</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card bg-dark text-light mb-3">
+                <div class="card-body text-center">
+                    <h5>File Requests</h5>
+                    <a href="{% url 'filerequest' %}" class="btn btn-warning">My Requests</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card bg-dark text-light mb-3">
+                <div class="card-body text-center">
+                    <h5>Decrypt Data</h5>
+                    <a href="{% url 'decryptdata' %}" class="btn btn-info">Decrypt</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mb-5">
+    <h2 class="text-center text-info mb-4">Cloud Server Admin Dashboard</h2>
+    
+    <!-- Existing Admin Actions -->
+    <div class="row mb-5 justify-content-center">
+        <div class="col-md-4">
+            <div class="card bg-dark text-light border-secondary mb-3 shadow">
+                <div class="card-body text-center">
+                    <h5>Pending Users</h5>
+                    <a href="{% url 'viewusers' %}" class="btn btn-primary mt-2">Manage Users</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-dark text-light border-secondary mb-3 shadow">
+                <div class="card-body text-center">
+                    <h5>Cloud Files</h5>
+                    <a href="{% url 'viewcloudfiles' %}" class="btn btn-success mt-2">View Files</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-dark text-light border-secondary mb-3 shadow">
+                <div class="card-body text-center">
+                    <h5>File Requests</h5>
+                    <a href="{% url 'viewfilesrequest' %}" class="btn btn-warning mt-2">View Requests</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Active Users Combined Section -->
+    <div class="card bg-dark shadow-lg border-info mb-4">
+        <div class="card-header border-secondary d-flex justify-content-between align-items-center bg-transparent py-3">
+            <h4 class="mb-0 text-info">Current Active Users</h4>
+            <span class="badge bg-info text-dark rounded-pill fs-5 px-3 py-2">Total: {{ user_count }}</span>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive" style="max-height: 25rem; overflow-y: auto;">
+                <table class="table table-dark table-hover table-striped mb-0">
+                    <thead class="text-info">
+                        <tr>
+                            <th scope="col" class="ps-4">#</th>
+                            <th scope="col">User Name</th>
+                            <th scope="col">Email Address</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sysuser in activated_users %}
+                        <tr>
+                            <td class="ps-4">{{ forloop.counter }}</td>
+                            <td>{{ sysuser.name }}</td>
+                            <td>{{ sysuser.email }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="3" class="text-center text-muted py-5">
+                                <i class="fas fa-users-slash fs-1 mb-2"></i><br>
+                                No active users currently in the system.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card bg-dark shadow-lg">
+            <div class="card-body p-5 text-center">
+                <h3 class="text-info mb-4">Encrypt Data</h3>
+                <form method="POST" action="{% url 'encryptdata' %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3 text-start">
+                        <label>Select Encryption Algorithm:</label>
+                        <select name="algorithm" class="form-select" required>
+                            <option value="aes">AES</option>
+                            <option value="ecc">ECC</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3 text-start">
+                        <label class="form-label text-white">Choose Input Type:</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="input_type" id="text_input" value="text" checked>
+                            <label class="form-check-label text-white" for="text_input">
+                                Text Message
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="input_type" id="file_input" value="file">
+                            <label class="form-check-label text-white" for="file_input">
+                                File Upload
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div id="text_area" class="mb-3 text-start">
+                        <label class="form-label text-white">Message to Encrypt:</label>
+                        <textarea name="message" rows="5" class="form-control" placeholder="Enter your message here to encrypt..." required></textarea>
+                    </div>
+                    
+                    <div id="file_area" class="mb-3 text-start" style="display: none;">
+                        <label class="form-label text-white">File to Encrypt:</label>
+                        <input type="file" name="file" class="form-control" accept="*/*">
+                        <small class="text-muted">Supported: All file types (images, documents, etc.)</small>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-lg rounded-pill px-5 mt-3">ENCRYPT & UPLOAD</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Toggle between text and file input
+document.querySelectorAll('input[name="input_type"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+        const textArea = document.getElementById('text_area');
+        const fileArea = document.getElementById('file_area');
+        const textInput = document.querySelector('textarea[name="message"]');
+        const fileInput = document.querySelector('input[name="file"]');
+        
+        if (this.value === 'text') {
+            textArea.style.display = 'block';
+            fileArea.style.display = 'none';
+            textInput.required = true;
+            fileInput.required = false;
+        } else {
+            textArea.style.display = 'none';
+            fileArea.style.display = 'block';
+            textInput.required = false;
+            fileInput.required = true;
+        }
+    });
+});
+</script>
+{% endblock %}

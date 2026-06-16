@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    .chat-container { height: 75vh; }
+    .chat-sidebar { border-right: 1px solid #444; overflow-y: auto; height: 100%; }
+    .chat-messages { overflow-y: auto; height: 100%; padding: 15px; background: #1a1a1a; border-radius: 5px; }
+    .message-bubble { padding: 10px 15px; border-radius: 15px; margin-bottom: 10px; max-width: 75%; }
+    .msg-sent { background-color: #005c4b; color: white; margin-left: auto; border-bottom-right-radius: 0; }
+    .msg-received { background-color: #202c33; color: white; margin-right: auto; border-bottom-left-radius: 0; }
+    .user-item { cursor: pointer; padding: 10px; border-bottom: 1px solid #333; transition: 0.2s; }
+    .user-item:hover, .user-item.active { background-color: #2a2a2a; }
+    .timestamp { font-size: 0.75rem; color: #aaa; text-align: right; margin-top: 5px; }
+</style>
+
+<div class="row chat-container bg-dark shadow-lg rounded">
+    <!-- Sidebar: Users List -->
+    <div class="col-md-4 chat-sidebar p-0">
+        <h4 class="p-3 text-info border-bottom border-secondary mb-0">Chats</h4>
+        <div class="list-group list-group-flush" id="userList" role="tablist">
+            {% for other_user, msgs in grouped_transactions.items %}
+            <a class="list-group-item list-group-item-action user-item bg-transparent text-light {% if forloop.first %}active{% endif %}" 
+               id="list-{{ forloop.counter }}-list" data-bs-toggle="list" href="#list-{{ forloop.counter }}" role="tab">
+                <i class="fas fa-user-circle fs-4 me-2"></i> {{ other_user }}
+            </a>
+            {% empty %}
+            <div class="p-3 text-muted">No transactions found.</div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Main Chat Area -->
+    <div class="col-md-8 p-0">
+        <div class="tab-content h-100" id="nav-tabContent">
+            {% for other_user, msgs in grouped_transactions.items %}
+            <div class="tab-pane fade {% if forloop.first %}show active{% endif %} h-100" 
+                 id="list-{{ forloop.counter }}" role="tabpanel">
+                 
+                <!-- Chat Header -->
+                <div class="p-3 bg-secondary text-white border-bottom border-dark sticky-top">
+                    <h5 class="mb-0">{{ other_user }}</h5>
+                </div>
+
+                <!-- Messages -->
+                <div class="chat-messages">
+                    {% for msg in msgs %}
+                        <div class="message-bubble {% if msg.type == 'sent' %}msg-sent{% else %}msg-received{% endif %}">
+                            <strong><i class="fas fa-file-alt"></i> {{ msg.filename }}</strong><br>
+                            Status: <span class="badge bg-{% if msg.status == 'approved' %}success{% else %}warning text-dark{% endif %}">
+                                {{ msg.status|title }}
+                            </span><br>
+                            
+                            {% if msg.type == 'received' and msg.status == 'approved' %}
+                            <div class="mt-2 text-end">
+                                <a href="{% url 'viewmyfiles' msg.fileid %}" class="btn btn-outline-light btn-sm">Decrypt File</a>
+                            </div>
+                            {% endif %}
+                            
+                            <div class="timestamp">{{ msg.datetime|date:"M d, Y h:i A" }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

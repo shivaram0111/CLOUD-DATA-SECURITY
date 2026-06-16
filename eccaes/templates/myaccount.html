@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card bg-dark shadow-lg">
+                <div class="card-body p-5">
+                    <h3 class="text-center text-info mb-4">My Account Details</h3>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label text-muted">Name:</label>
+                            <p class="text-white fs-5">{{ userdata.name }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label text-muted">Email:</label>
+                            <p class="text-white fs-5">{{ userdata.email }}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label text-muted">Contact:</label>
+                            <p class="text-white fs-5">{{ userdata.contact }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label text-muted">Address:</label>
+                            <p class="text-white fs-5">{{ userdata.address }}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label text-muted">Account Status:</label>
+                            <p class="fw-bold fs-5 text-{% if userdata.status == 'Activated' %}success{% else %}warning{% endif %}">{{ userdata.status }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label text-muted">Account Created:</label>
+                            <p class="text-white fs-5">{% if userdata.created_at %}{{ userdata.created_at|date:"M d, Y h:i a" }}{% else %}Unknown{% endif %}</p>
+                        </div>
+                    </div>
+                    
+                    <hr class="border-secondary mt-2 mb-4">
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'userhome' %}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back</a>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                            <i class="fas fa-edit"></i> Edit Profile
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Profile Modal -->
+<div class="modal fade text-dark" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form method="POST" action="{% url 'myaccount' %}">
+            {% csrf_token %}
+            <div class="modal-content bg-dark border-secondary text-light">
+                <div class="modal-header border-secondary">
+                    <h5 class="modal-title text-info" id="editProfileModalLabel">Edit Profile</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" name="name" class="form-control bg-dark text-light border-secondary" value="{{ userdata.name }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Contact Number</label>
+                        <input type="text" name="contact" class="form-control bg-dark text-light border-secondary" value="{{ userdata.contact }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Address</label>
+                        <textarea name="address" rows="3" class="form-control bg-dark text-light border-secondary" required>{{ userdata.address }}</textarea>
+                    </div>
+                    <div class="alert alert-warning py-2 mb-0 mt-3" style="font-size: 0.85rem;">
+                        <i class="fas fa-info-circle"></i> Email cannot be changed as it is used for login and file transactions.
+                    </div>
+                </div>
+                <div class="modal-footer border-secondary">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

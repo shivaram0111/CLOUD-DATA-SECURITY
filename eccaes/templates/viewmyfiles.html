@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card bg-dark shadow-lg">
+                <div class="card-body p-5">
+                    {% if files == 'True' %}
+                    <h3 class="text-center text-info mb-4">Enter Decryption Key</h3>
+                    <form method="POST" action="{% url 'viewmyfiles' id %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label">Decryption Key</label>
+                            <input type="text" name="filekey" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Decrypt File</button>
+                    </form>
+                    {% else %}
+                    <h3 class="text-center text-success mb-4">Decrypted Content</h3>
+                    {% if is_text %}
+                    <div class="alert alert-success">
+                        <h5>File: {{ filename }}</h5>
+                        <pre>{{ content }}</pre>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-success text-center">
+                        <h5>File: {{ filename }}</h5>
+                        <p>Binary file decrypted successfully!</p>
+                        <a href="{{ file_url }}" class="btn btn-success" download="{{ filename }}">
+                            <i class="fas fa-download"></i> Download Decrypted File
+                        </a>
+                    </div>
+                    {% endif %}
+                    <div class="text-center mt-3">
+                        <a href="{% url 'decryptdata' %}" class="btn btn-secondary">Back to Files</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
